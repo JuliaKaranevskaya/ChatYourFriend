@@ -94,16 +94,14 @@ class LoginViewController: UIViewController {
         super.viewDidLayoutSubviews()
         
         scrollView.frame = view.bounds
+        
+        setComponents()
        
-        setLoginPageView()
-        setEmailField()
-        setPasswordField()
-        setLoginButton()
+        
     }
     
     @objc private func didTapRegister() {
         let controller = RegisterViewController()
-        //controller.title = "Create account"
         navigationController?.pushViewController(controller, animated: true)
     }
     
@@ -156,17 +154,26 @@ class LoginViewController: UIViewController {
             
             UserDefaults.standard.set(email, forKey: "email")
             
-            
             strongSelf.navigationController?.dismiss(animated: true, completion: nil)
         }
     }
-    
-    
-    
+
     private func alertLoginError() {
         let alert = UIAlertController(title: "Alert", message: "Please make sure you've entered your e-mail and password. Check if password contains 6 or more symbols.", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)
+    }
+}
+
+
+//MARK: - View Configuration
+extension LoginViewController {
+    
+    private func setComponents() {
+        setLoginPageView()
+        setEmailField()
+        setPasswordField()
+        setLoginButton()
     }
     
     private func setLoginPageView() {
@@ -175,8 +182,6 @@ class LoginViewController: UIViewController {
         loginPageView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         loginPageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
         loginPageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        
-
     }
     
     private func setEmailField() {
@@ -186,7 +191,6 @@ class LoginViewController: UIViewController {
         emailField.heightAnchor.constraint(equalToConstant: 50).isActive = true
         emailField.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 50).isActive = true
         emailField.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -50).isActive = true
-        
     }
     
     private func setPasswordField() {
@@ -206,10 +210,10 @@ class LoginViewController: UIViewController {
         loginButton.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 50).isActive = true
         loginButton.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -50).isActive = true
     }
-    
-
 }
 
+
+//MARK: - logic for return button on keyboard
 extension LoginViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == emailField {

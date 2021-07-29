@@ -107,8 +107,7 @@ class RegisterViewController: UIViewController {
         
         view.backgroundColor = .white
         title = "Register"
-        
-        //navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Register", style: .done, target: self, action: #selector(didTapRegister))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Register", style: .done, target: self, action: #selector(didTapRegister))
         
         firstNameField.delegate = self
         lastNameField.delegate = self
@@ -133,28 +132,16 @@ class RegisterViewController: UIViewController {
         registerPageView.addGestureRecognizer(gesture)
     }
     
-    @objc private func didTapChangeUserImage() {
-        getUserImage()
-    }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
         scrollView.frame = view.bounds
-       
-        setRegisterPageView()
-        setFirstNameField()
-        selLastNameField()
-        setEmailField()
-        setPasswordField()
-        setRegisterButton()
+        setComponents()
     }
-    
-//    @objc private func didTapRegister() {
-//        let controller = RegisterViewController()
-//        controller.title = "Create account"
-//        navigationController?.pushViewController(controller, animated: true)
-//    }
+}
+
+//MARK: - Firebase Registration
+extension RegisterViewController {
     
     @objc private func didTapRegister() {
         
@@ -165,8 +152,7 @@ class RegisterViewController: UIViewController {
         passwordField.resignFirstResponder()
         
         //validation
-        guard
-            let firstName = firstNameField.text,
+        guard let firstName = firstNameField.text,
             let lastName = lastNameField.text,
             let email = emailField.text,
             let password = passwordField.text,
@@ -175,21 +161,19 @@ class RegisterViewController: UIViewController {
             !email.isEmpty,
             !password.isEmpty,
             password.count >= 6 else {
-            alertLoginError()
+            alertRegisterError()
             return
         }
-        //Firebase Register
         
-        DatabaseManager.shared.validateNewUser(by: email) { [weak self] newUser in
+        //Firebase Register
+        DatabaseManager.shared.validateNewUser(by: email) { [weak self] oldUser in
             
             guard let strongSelf = self else {
                 return
             }
-            
-            
-            guard !newUser else {
-                //it's not a new user
-                strongSelf.alertLoginError(message: "The account with this email already exists.")
+  
+            guard !oldUser else {
+                strongSelf.alertNotNewUserError()
                 return
             }
             
@@ -201,6 +185,9 @@ class RegisterViewController: UIViewController {
                     print("Register error")
                     return
                 }
+                
+                UserDefaults.standard.setValue("\(firstName) \(lastName)", forKey: "name")
+                UserDefaults.standard.setValue(email, forKey: "email")
                 
                 let user = MessengerUser(firstName: firstName, lastName: lastName, email: email)
                 
@@ -227,15 +214,19 @@ class RegisterViewController: UIViewController {
                 strongSelf.navigationController?.dismiss(animated: true, completion: nil)
             }
         }
-
     }
-    
+}
 
+//MARK: - View Configuration
+extension RegisterViewController {
     
-    private func alertLoginError(message: String = "Please enter all needed information") {
-        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
-        present(alert, animated: true, completion: nil)
+    private func setComponents() {
+        setRegisterPageView()
+        setFirstNameField()
+        selLastNameField()
+        setEmailField()
+        setPasswordField()
+        setRegisterButton()
     }
     
     private func setRegisterPageView() {
@@ -244,8 +235,6 @@ class RegisterViewController: UIViewController {
         registerPageView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         registerPageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
         registerPageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        
-
     }
     
     private func setFirstNameField() {
@@ -255,7 +244,6 @@ class RegisterViewController: UIViewController {
         firstNameField.heightAnchor.constraint(equalToConstant: 50).isActive = true
         firstNameField.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 50).isActive = true
         firstNameField.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -50).isActive = true
-        
     }
     
     private func selLastNameField() {
@@ -293,10 +281,31 @@ class RegisterViewController: UIViewController {
         registerButton.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 50).isActive = true
         registerButton.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -50).isActive = true
     }
-
+    
 }
 
+//MARK: - Alerts
+extension RegisterViewController {
+    
+    private func alertRegisterError() {
+        let alert = UIAlertController(title: "Error", message: "Please enter all needed information", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+    
+    private func alertNotNewUserError() {
+        let alert = UIAlertController(title: "Error", message: "The account with this email already exists.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+}
+
+//MARK: - Logic of changing user image
 extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    @objc private func didTapChangeUserImage() {
+        getUserImage()
+    }
     
     func getUserImage() {
         let chooseImageSheet = UIAlertController(title: "Profile picture", message: "Add your profile picture", preferredStyle: .actionSheet)
@@ -345,6 +354,7 @@ extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationC
     }
 }
 
+//MARK: - logic of return button on keyboard
 extension RegisterViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == firstNameField {

@@ -555,7 +555,7 @@ extension DatabaseManager {
                 completion(.failure(DataBaseError.failToGetUser))
                 return
             }
-            completion(.success(value))
+            return completion(.success(value))
         }
     }
     
@@ -607,7 +607,7 @@ extension DatabaseManager {
                 }
                 return safeSenderEmail == targetSenderEmail
             }) {
-                //get od
+                //get id
                 guard let id = conversation["id"] as? String else {
                     completion(.failure(DataBaseError.failToGetUser))
                     return
