@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-//убирать клавиатуру с экрана по на жатию на любую область экрана
+
 extension UIViewController {
     func hideKeyboardWhenTappedAround() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
