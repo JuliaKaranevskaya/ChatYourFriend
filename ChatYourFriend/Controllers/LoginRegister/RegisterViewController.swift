@@ -9,22 +9,15 @@ import UIKit
 import FirebaseAuth
 
 class RegisterViewController: UIViewController {
-
-    private let scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.clipsToBounds = true
-        return scrollView
-    }()
     
+    //MARK: UI elements
     private let registerPageView: UIImageView = {
         let view = UIImageView()
-        view.image = UIImage(named: "person")
+        view.image = UIImage(named: "registerPageView")
         view.tintColor = .systemGreen
         view.contentMode = .scaleAspectFit
-        view.layer.masksToBounds = true
-        view.layer.borderWidth = 2
-        view.layer.borderColor = UIColor.systemGray6.cgColor
         view.layer.cornerRadius = 50
+        view.layer.masksToBounds = true
         view.clipsToBounds = true
         return view
     }()
@@ -95,7 +88,7 @@ class RegisterViewController: UIViewController {
         button.setTitle("Register", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
-        button.backgroundColor = .systemGreen
+        button.backgroundColor = UIColor.init(named: "darkPurple")
         button.layer.cornerRadius = 20
         button.layer.masksToBounds = true
         button.addTarget(self, action: #selector(didTapRegister), for: .touchUpInside)
@@ -105,53 +98,42 @@ class RegisterViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .white
+        self.hideKeyboardWhenTappedAround()
+        
+        view.backgroundColor = UIColor.init(named: "lightPurple")
         title = "Register"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Register", style: .done, target: self, action: #selector(didTapRegister))
         
         firstNameField.delegate = self
         lastNameField.delegate = self
         emailField.delegate = self
         passwordField.delegate = self
-        
-        //Add subviews
-        view.addSubview(scrollView)
-        scrollView.addSubview(registerPageView)
-        scrollView.addSubview(firstNameField)
-        scrollView.addSubview(lastNameField)
-        scrollView.addSubview(emailField)
-        scrollView.addSubview(passwordField)
-        scrollView.addSubview(registerButton)
+       
+        view.addSubview(registerPageView)
+        view.addSubview(firstNameField)
+        view.addSubview(lastNameField)
+        view.addSubview(emailField)
+        view.addSubview(passwordField)
+        view.addSubview(registerButton)
         
         registerPageView.isUserInteractionEnabled = true
-        scrollView.isUserInteractionEnabled = true
+        view.isUserInteractionEnabled = true
         
         let gesture = UITapGestureRecognizer(target: self, action: #selector(didTapChangeUserImage))
-        gesture.numberOfTouchesRequired = 1
-        gesture.numberOfTapsRequired = 1
         registerPageView.addGestureRecognizer(gesture)
     }
     
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        scrollView.frame = view.bounds
         setComponents()
     }
 }
 
 //MARK: - Firebase Registration
 extension RegisterViewController {
-    
+ 
     @objc private func didTapRegister() {
-        
-        //get rid of keyboard
-        firstNameField.resignFirstResponder()
-        lastNameField.resignFirstResponder()
-        emailField.resignFirstResponder()
-        passwordField.resignFirstResponder()
-        
-        //validation
+   
         guard let firstName = firstNameField.text,
             let lastName = lastNameField.text,
             let email = emailField.text,
@@ -159,28 +141,20 @@ extension RegisterViewController {
             !firstName.isEmpty,
             !lastName.isEmpty,
             !email.isEmpty,
-            !password.isEmpty,
-            password.count >= 6 else {
+            !password.isEmpty else {
             alertRegisterError()
             return
         }
-        
-        //Firebase Register
+     
         DatabaseManager.shared.validateNewUser(by: email) { [weak self] oldUser in
-            
-            guard let strongSelf = self else {
-                return
-            }
-  
+         
             guard !oldUser else {
-                strongSelf.alertNotNewUserError()
+                self?.alertNotNewUserError()
                 return
             }
-            
+        
             FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
-                guard let strongSelf = self else {
-                    return
-                }
+                
                 guard authResult != nil, error == nil else {
                     print("Register error")
                     return
@@ -193,8 +167,7 @@ extension RegisterViewController {
                 
                 DatabaseManager.shared.addUser(user: user) { done in
                     if done {
-                        //upload image
-                        guard let image = strongSelf.registerPageView.image,
+                        guard let image = self?.registerPageView.image,
                               let data = image.pngData() else {
                             return
                         }
@@ -211,7 +184,7 @@ extension RegisterViewController {
                     }
                 }
                 
-                strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+                self?.navigationController?.dismiss(animated: true, completion: nil)
             }
         }
     }
@@ -231,8 +204,8 @@ extension RegisterViewController {
     
     private func setRegisterPageView() {
         registerPageView.translatesAutoresizingMaskIntoConstraints = false
-        registerPageView.topAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.topAnchor, constant: 50).isActive = true
-        registerPageView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        registerPageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50).isActive = true
+        registerPageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         registerPageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
         registerPageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
     }
@@ -240,46 +213,46 @@ extension RegisterViewController {
     private func setFirstNameField() {
         firstNameField.translatesAutoresizingMaskIntoConstraints = false
         firstNameField.topAnchor.constraint(equalTo: registerPageView.bottomAnchor, constant: 10).isActive = true
-        firstNameField.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
-        firstNameField.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        firstNameField.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 50).isActive = true
-        firstNameField.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -50).isActive = true
+        firstNameField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        firstNameField.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        firstNameField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive = true
+        firstNameField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50).isActive = true
     }
     
     private func selLastNameField() {
         lastNameField.translatesAutoresizingMaskIntoConstraints = false
         lastNameField.topAnchor.constraint(equalTo: firstNameField.bottomAnchor, constant: 10).isActive = true
-        lastNameField.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
-        lastNameField.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        lastNameField.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 50).isActive = true
-        lastNameField.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -50).isActive = true
+        lastNameField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        lastNameField.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        lastNameField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive = true
+        lastNameField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50).isActive = true
     }
     
     private func setEmailField() {
         emailField.translatesAutoresizingMaskIntoConstraints = false
         emailField.topAnchor.constraint(equalTo: lastNameField.bottomAnchor, constant: 10).isActive = true
-        emailField.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
-        emailField.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        emailField.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 50).isActive = true
-        emailField.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -50).isActive = true
+        emailField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        emailField.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        emailField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive = true
+        emailField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50).isActive = true
     }
     
     private func setPasswordField() {
         passwordField.translatesAutoresizingMaskIntoConstraints = false
         passwordField.topAnchor.constraint(equalTo: emailField.bottomAnchor, constant: 10).isActive = true
-        passwordField.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
-        passwordField.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        passwordField.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 50).isActive = true
-        passwordField.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -50).isActive = true
+        passwordField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        passwordField.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        passwordField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive = true
+        passwordField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50).isActive = true
     }
     
     private func setRegisterButton() {
         registerButton.translatesAutoresizingMaskIntoConstraints = false
         registerButton.topAnchor.constraint(equalTo: passwordField.bottomAnchor, constant: 10).isActive = true
-        registerButton.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
-        registerButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        registerButton.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 50).isActive = true
-        registerButton.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -50).isActive = true
+        registerButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        registerButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        registerButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive = true
+        registerButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50).isActive = true
     }
     
 }
@@ -300,7 +273,7 @@ extension RegisterViewController {
     }
 }
 
-//MARK: - Logic of changing user image
+//MARK: - PickerController, NavigationController methods
 extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @objc private func didTapChangeUserImage() {
@@ -308,7 +281,7 @@ extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationC
     }
     
     func getUserImage() {
-        let chooseImageSheet = UIAlertController(title: "Profile picture", message: "Add your profile picture", preferredStyle: .actionSheet)
+        let chooseImageSheet = UIAlertController(title: "Profile picture", message: "", preferredStyle: .actionSheet)
         
         chooseImageSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
@@ -348,10 +321,7 @@ extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationC
         registerPageView.image = selectedImage
         picker.dismiss(animated: true, completion: nil)
     }
-    
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true, completion: nil)
-    }
+
 }
 
 //MARK: - logic of return button on keyboard

@@ -10,7 +10,7 @@ import UIKit
 class NewChatViewController: UIViewController {
     
     public var completion: ((SearchResult) -> (Void))?
-    
+ 
     private var users = [[String: String]]()
     
     private var results = [SearchResult]()
@@ -29,46 +29,30 @@ class NewChatViewController: UIViewController {
         tableView.register(NewChatCell.self, forCellReuseIdentifier: NewChatCell.identifier)
         return tableView
     }()
-    
-    private let noUserFoundLabel: UILabel = {
-        let label = UILabel()
-        label.isHidden = true
-        label.text = "No User Found"
-        label.textAlignment = .center
-        label.textColor = .green
-        label.font = .systemFont(ofSize: 21)
-        label.backgroundColor = .red
-        return label
-    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         view.addSubview(tableView)
-        view.addSubview(noUserFoundLabel)
         tableView.delegate = self
         tableView.dataSource = self
         searchBar.delegate = self
         navigationController?.navigationBar.topItem?.titleView = searchBar
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(closeNewChatVC))
         searchBar.becomeFirstResponder()
-       
-
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableView.frame = view.bounds
-        noUserFoundLabel.center = view.center
     }
     
     @objc private func closeNewChatVC() {
         dismiss(animated: true, completion: nil)
     }
-    
-
 }
 
+//MARK: - TableView methods
 extension NewChatViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return results.count
@@ -92,10 +76,9 @@ extension NewChatViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 90
     }
-    
-    
 }
 
+//MARK: - Searching methods
 extension NewChatViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -105,7 +88,6 @@ extension NewChatViewController: UISearchBarDelegate {
         searchBar.resignFirstResponder()
         results.removeAll()
         self.searchUsers(query: text)
-        
     }
     
     func searchUsers(query: String) {
@@ -121,13 +103,10 @@ extension NewChatViewController: UISearchBarDelegate {
                     self?.filterUsers(with: query)
                 case .failure(let error):
                     print("Fail to get users \(error)")
-                
                 }
             })
         }
     }
-    
-
     
     func filterUsers(with term: String) {
         guard let currentUserEmail = UserDefaults.standard.value(forKey: "email") as? String,
@@ -161,17 +140,12 @@ extension NewChatViewController: UISearchBarDelegate {
     
     func updatePage() {
         if results.isEmpty {
-            self.noUserFoundLabel.isHidden = false
             self.tableView.isHidden = true
         } else {
-            self.noUserFoundLabel.isHidden = true
             self.tableView.isHidden = false
             self.tableView.reloadData()
         }
     }
 }
 
-struct SearchResult {
-    let userName: String
-    let userEmail: String
-}
+

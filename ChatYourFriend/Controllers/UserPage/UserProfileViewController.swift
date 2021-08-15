@@ -11,7 +11,9 @@ import SDWebImage
 
 class UserProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    let data = ["Log out"]
+    let userProfileName = UserDefaults.standard.value(forKey: "name") as? String ?? "No name"
+    let userProfileEmail = UserDefaults.standard.value(forKey: "email") as? String ?? "No email"
+    var userInfo = [String]()
     
     let tableView: UITableView = {
         let tv = UITableView()
@@ -22,12 +24,41 @@ class UserProfileViewController: UIViewController, UITableViewDelegate, UITableV
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(tableView)
+        
         tableView.frame = view.bounds
+        tableView.separatorColor = .clear
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableHeaderView = setupTableViewHeader()
-
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Log out", style: .done, target: self, action: #selector(didTapLogout))
         
+        userInfo.append(userProfileName)
+        userInfo.append(userProfileEmail)
+    }
+    
+    @objc private func didTapLogout() {
+        let actionSheet = UIAlertController(title: "", message: "", preferredStyle: .actionSheet)
+        actionSheet.addAction(UIAlertAction(title: "Log out", style: .destructive, handler: { [weak self] action in
+            
+            UserDefaults.standard.setValue(nil, forKey: "name")
+            UserDefaults.standard.setValue(nil, forKey: "email")
+            
+            do {
+                try FirebaseAuth.Auth.auth().signOut()
+                
+                let controller = LoginViewController()
+                let navigation = UINavigationController(rootViewController: controller)
+                navigation.modalPresentationStyle = .fullScreen
+                self?.present(navigation, animated: true)
+                
+            } catch  {
+                print("Failed to sing out operation")
+            }
+        }))
+        
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+        present(actionSheet, animated: true)
     }
     
     func setupTableViewHeader() -> UIView? {
@@ -37,7 +68,7 @@ class UserProfileViewController: UIViewController, UITableViewDelegate, UITableV
         let safeEmail = DatabaseManager.safeEmail(email: email as! String)
         let path = "images/" + safeEmail + "_profile_picture.png"
         let containerView = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 300))
-        containerView.backgroundColor = .yellow
+       
         
         let imageView = UIImageView(frame: CGRect(x: (containerView.frame.width - 150) / 2, y: 75, width: 150, height: 150))
         imageView.contentMode = .scaleAspectFill
@@ -64,51 +95,16 @@ class UserProfileViewController: UIViewController, UITableViewDelegate, UITableV
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
+        return userInfo.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = data[indexPath.row]
+        cell.textLabel?.text = userInfo[indexPath.row]
         cell.textLabel?.textAlignment = .center
-        cell.textLabel?.textColor = .blue
+        cell.textLabel?.textColor = .black
+        cell.selectionStyle = .none
         return cell
     }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        tableView.deselectRow(at: indexPath, animated: true)
-        
-        let actionSheet = UIAlertController(title: "", message: "", preferredStyle: .actionSheet)
-        actionSheet.addAction(UIAlertAction(title: "Log out", style: .destructive, handler: { [weak self] action in
-            
-            guard let strongSelf = self else {
-                return
-            }
-            
-            UserDefaults.standard.setValue(nil, forKey: "name")
-            UserDefaults.standard.setValue(nil, forKey: "email")
-            
-            do {
-                try FirebaseAuth.Auth.auth().signOut()
-                
-                let controller = LoginViewController()
-                let navigation = UINavigationController(rootViewController: controller)
-                navigation.modalPresentationStyle = .fullScreen
-                strongSelf.present(navigation, animated: true)
-                
-            } catch  {
-                print("Failed sing out")
-            }
-        }))
-        
-        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        
-        present(actionSheet, animated: true)
-        
-
-    }
-
-
 }
 

@@ -25,6 +25,10 @@
 		C1AB3E6D26989580005117BB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C1AB3E6B26989580005117BB /* LaunchScreen.storyboard */; };
 		C1AB3E752698AB2A005117BB /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1AB3E742698AB2A005117BB /* LoginViewController.swift */; };
 		C1AB3E772698AB41005117BB /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1AB3E762698AB41005117BB /* RegisterViewController.swift */; };
+		C1ED6C7626C6C74B00DC36E4 /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ED6C7526C6C74B00DC36E4 /* SearchResult.swift */; };
+		C1ED6C7826C6C7A300DC36E4 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ED6C7726C6C7A300DC36E4 /* Conversation.swift */; };
+		C1ED6C7A26C6C7CE00DC36E4 /* LatestMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ED6C7926C6C7CE00DC36E4 /* LatestMessage.swift */; };
+		C1ED6C7D26C6D2E500DC36E4 /* MessengerUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ED6C7C26C6D2E500DC36E4 /* MessengerUser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +54,10 @@
 		C1AB3E6E26989580005117BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C1AB3E742698AB2A005117BB /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		C1AB3E762698AB41005117BB /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
+		C1ED6C7526C6C74B00DC36E4 /* SearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResult.swift; sourceTree = "<group>"; };
+		C1ED6C7726C6C7A300DC36E4 /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
+		C1ED6C7926C6C7CE00DC36E4 /* LatestMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestMessage.swift; sourceTree = "<group>"; };
+		C1ED6C7C26C6D2E500DC36E4 /* MessengerUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessengerUser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,9 +100,9 @@
 		C15F93A5269C3809008E6627 /* Chats */ = {
 			isa = PBXGroup;
 			children = (
+				C15F93A2269C37CA008E6627 /* ChatsViewController.swift */,
 				C15F939E269C374C008E6627 /* NewChatViewController.swift */,
 				C15F939C269C373D008E6627 /* ChatViewController.swift */,
-				C15F93A2269C37CA008E6627 /* ChatsViewController.swift */,
 			);
 			path = Chats;
 			sourceTree = "<group>";
@@ -140,9 +148,10 @@
 				C1AB3E602698957C005117BB /* AppDelegate.swift */,
 				C1AB3E622698957C005117BB /* SceneDelegate.swift */,
 				C1A1597F26ADBF0000AC2F8D /* Extensions */,
-				C15F943026A4825B008E6627 /* Views */,
 				C1C11A9A26B1B42B005EB34C /* Firebase */,
-				C1AB3E7826997DEB005117BB /* LoginRegister */,
+				C1ED6C7426C6C73100DC36E4 /* Models */,
+				C15F943026A4825B008E6627 /* Views */,
+				C1ED6C7B26C6C84200DC36E4 /* Controllers */,
 				C1AB3E662698957C005117BB /* Main.storyboard */,
 				C1AB3E6926989580005117BB /* Assets.xcassets */,
 				C1AB3E6B26989580005117BB /* LaunchScreen.storyboard */,
@@ -157,8 +166,6 @@
 			children = (
 				C1AB3E742698AB2A005117BB /* LoginViewController.swift */,
 				C1AB3E762698AB41005117BB /* RegisterViewController.swift */,
-				C15F93A4269C37F6008E6627 /* UserPage */,
-				C15F93A5269C3809008E6627 /* Chats */,
 			);
 			path = LoginRegister;
 			sourceTree = "<group>";
@@ -170,6 +177,27 @@
 				C15F93A8269C38A5008E6627 /* DatabaseManager.swift */,
 			);
 			path = Firebase;
+			sourceTree = "<group>";
+		};
+		C1ED6C7426C6C73100DC36E4 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				C1ED6C7526C6C74B00DC36E4 /* SearchResult.swift */,
+				C1ED6C7726C6C7A300DC36E4 /* Conversation.swift */,
+				C1ED6C7926C6C7CE00DC36E4 /* LatestMessage.swift */,
+				C1ED6C7C26C6D2E500DC36E4 /* MessengerUser.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		C1ED6C7B26C6C84200DC36E4 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				C1AB3E7826997DEB005117BB /* LoginRegister */,
+				C15F93A5269C3809008E6627 /* Chats */,
+				C15F93A4269C37F6008E6627 /* UserPage */,
+			);
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -287,18 +315,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C1ED6C7A26C6C7CE00DC36E4 /* LatestMessage.swift in Sources */,
 				C1AB3E752698AB2A005117BB /* LoginViewController.swift in Sources */,
 				C1A1597E26ADAD0800AC2F8D /* NewChatCell.swift in Sources */,
 				C15F93A1269C37B1008E6627 /* UserProfileViewController.swift in Sources */,
+				C1ED6C7826C6C7A300DC36E4 /* Conversation.swift in Sources */,
 				C1AB3E772698AB41005117BB /* RegisterViewController.swift in Sources */,
 				C15F939F269C374C008E6627 /* NewChatViewController.swift in Sources */,
 				C15F93A9269C38A5008E6627 /* DatabaseManager.swift in Sources */,
 				C15F943226A4827C008E6627 /* ConversationTableViewCell.swift in Sources */,
 				C15F93A7269C385C008E6627 /* StorageManager.swift in Sources */,
+				C1ED6C7626C6C74B00DC36E4 /* SearchResult.swift in Sources */,
 				C1A1598126ADBF1300AC2F8D /* Extensions.swift in Sources */,
 				C1AB3E612698957C005117BB /* AppDelegate.swift in Sources */,
 				C15F939D269C373D008E6627 /* ChatViewController.swift in Sources */,
 				C15F93A3269C37CA008E6627 /* ChatsViewController.swift in Sources */,
+				C1ED6C7D26C6D2E500DC36E4 /* MessengerUser.swift in Sources */,
 				C1AB3E632698957C005117BB /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

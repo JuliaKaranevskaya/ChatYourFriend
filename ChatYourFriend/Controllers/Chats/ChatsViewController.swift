@@ -8,57 +8,40 @@
 import UIKit
 import FirebaseAuth
 
- struct Conversation {
-    let id: String
-    let name: String
-    let otherUserEmail: String
-    let latestMessage: LatestMessage
-}
-
- struct LatestMessage {
-    let date: String
-    let message: String
-    let isRead: Bool
-}
-
 class ChatsViewController: UIViewController {
-    
+
     private var conversations = [Conversation]()
     
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.register(ConversationTableViewCell.self, forCellReuseIdentifier: ConversationTableViewCell.identifier)
-        tableView.isHidden = true
         return tableView
-    }()
-    
-    private let noDialogueLabel: UILabel = {
-        let label = UILabel()
-        label.text = "You don't have dialogues here. Start new dialogue."
-        label.textAlignment = .center
-        label.font = .systemFont(ofSize: 22)
-        label.textColor = .blue
-        label.isHidden = true
-        return label
     }()
     
     private var loginObserver: NSObjectProtocol?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTapAddButton))
+        
         view.addSubview(tableView)
-        view.addSubview(noDialogueLabel)
-        setupTableView()
+       
+        tableView.delegate = self
+        tableView.dataSource = self
+        
         fetchDialogues()
         startListeningForConversation()
         
-        loginObserver = NotificationCenter.default.addObserver(forName: .didLoginNotification, object: nil, queue: .main, using: { [weak self] _ in
-            guard let strongSelf = self else {
-                return
-            }
-            strongSelf.startListeningForConversation()
+        loginObserver = NotificationCenter.default.addObserver(forName: Notification.Name("didLoginNotification"), object: nil, queue: .main, using: { [weak self] _ in
+           
+            self?.startListeningForConversation()
         })
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        tableView.frame = view.bounds
     }
     
     private func startListeningForConversation() {
@@ -92,10 +75,7 @@ class ChatsViewController: UIViewController {
         
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        tableView.frame = view.bounds
-    }
+
     
 
     
@@ -106,25 +86,23 @@ class ChatsViewController: UIViewController {
     }
     
     @objc private func didTapAddButton() {
+        
         let controller = NewChatViewController()
+        
         controller.completion = { [weak self] result in
             
-            guard let strongSelf = self else {
-                return
-            }
+            let currentConversations = self?.conversations
             
-            let currentConversations = strongSelf.conversations
-            
-            if let targetConversations = currentConversations.first(where: {
+            if let targetConversations = currentConversations?.first(where: {
                 $0.otherUserEmail == DatabaseManager.safeEmail(email: result.userEmail)
             }) {
                 let controller = ChatViewController(email: targetConversations.otherUserEmail, id: targetConversations.id)
                 controller.isNewChat = false
                 controller.title = targetConversations.name
                 controller.navigationItem.largeTitleDisplayMode = .never
-                strongSelf.navigationController?.pushViewController(controller, animated: true)
+                self?.navigationController?.pushViewController(controller, animated: true)
             } else {
-                strongSelf.createNewConversation(result: result)
+                self?.createNewConversation(result: result)
             }
     
         }
@@ -165,19 +143,14 @@ class ChatsViewController: UIViewController {
             present(navigation, animated: false)
         }
     }
-    
-    private func setupTableView() {
-        tableView.delegate = self
-        tableView.dataSource = self
-    }
-    
+
     private func fetchDialogues() {
         tableView.isHidden = false
+        
     }
-
-
 }
 
+//MARK: - TableView Delegate & Datasource Methods
 extension ChatsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return conversations.count
@@ -187,7 +160,7 @@ extension ChatsViewController: UITableViewDelegate, UITableViewDataSource {
         let model = conversations[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: ConversationTableViewCell.identifier, for: indexPath) as! ConversationTableViewCell
         cell.configure(with: model)
-        //cell.accessoryType = .disclosureIndicator
+        cell.accessoryType = .disclosureIndicator
         return cell
     }
     
@@ -207,7 +180,7 @@ extension ChatsViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 120
+        return 90
     }
     
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
@@ -215,18 +188,18 @@ extension ChatsViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+       
         if editingStyle == .delete {
-            //delete
             let conversationID = conversations[indexPath.row].id
             tableView.beginUpdates()
+            self.conversations.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .left)
             
-            DatabaseManager.shared.deleteConversation(conversationID: conversationID) { [weak self] success in
+            DatabaseManager.shared.deleteConversation(conversationID: conversationID) { success in
                 if success {
-                    self?.conversations.remove(at: indexPath.row)
-                    tableView.deleteRows(at: [indexPath], with: .left)
+                  print("Success")
                 }
             }
-            
             
             tableView.endUpdates()
         }

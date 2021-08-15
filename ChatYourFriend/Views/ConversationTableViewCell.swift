@@ -14,12 +14,12 @@ class ConversationTableViewCell: UITableViewCell {
     private let userImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
-        iv.layer.cornerRadius = 50
+        iv.layer.cornerRadius = 35
         iv.layer.masksToBounds = true
         return iv
     }()
     
-    private let userPersonalLabel: UILabel = {
+    private let userNameLabel: UILabel = {
         let l = UILabel()
         l.font = .systemFont(ofSize: 21, weight: .semibold)
         return l
@@ -35,7 +35,7 @@ class ConversationTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(userImageView)
-        contentView.addSubview(userPersonalLabel)
+        contentView.addSubview(userNameLabel)
         contentView.addSubview(userMessageLabel)
     }
     
@@ -45,9 +45,9 @@ class ConversationTableViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        userImageView.frame = CGRect(x: 10, y: 10, width: 100, height: 100)
+        userImageView.frame = CGRect(x: 10, y: 10, width: 70, height: 70)
         
-        userPersonalLabel.frame = CGRect(x: userImageView.frame.size.width + 10 + 10, y: 10, width: contentView.frame.size.width - userImageView.frame.size.width - 20, height: (contentView.frame.size.height - 20) / 2)
+        userNameLabel.frame = CGRect(x: userImageView.frame.size.width + 10 + 10, y: 10, width: contentView.frame.size.width - userImageView.frame.size.width - 20, height: (contentView.frame.size.height - 20) / 2)
         
         userMessageLabel.frame = CGRect(x: userImageView.frame.size.width + 10 + 10, y: (contentView.frame.size.height - 20) / 2 + 10, width: contentView.frame.size.width - userImageView.frame.size.width - 20, height: (contentView.frame.size.height - 20) / 2)
         
@@ -55,7 +55,7 @@ class ConversationTableViewCell: UITableViewCell {
     
     public func configure(with model: Conversation) {
         self.userMessageLabel.text = model.latestMessage.message
-        self.userPersonalLabel.text = model.name
+        self.userNameLabel.text = model.name
         
         let path = "images/\(model.otherUserEmail)_profile_picture.png"
         StorageManager.shared.downloadURL(path: path) { [weak self] result in

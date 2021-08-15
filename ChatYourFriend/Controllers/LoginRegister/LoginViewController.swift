@@ -10,17 +10,13 @@ import FirebaseAuth
 
 class LoginViewController: UIViewController {
     
-    private let scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.clipsToBounds = true
-        return scrollView
-    }()
-    
+    //MARK: UI elements
     private let loginPageView: UIImageView = {
         let view = UIImageView()
-        view.image = UIImage(named: "icon")
+        view.image = UIImage(named: "loginPageView")
+        view.tintColor = .systemGreen
         view.contentMode = .scaleAspectFit
-        view.clipsToBounds = true
+        view.layer.masksToBounds = true
         return view
     }()
     
@@ -60,7 +56,7 @@ class LoginViewController: UIViewController {
         button.setTitle("Log in", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
-        button.backgroundColor = .systemGreen
+        button.backgroundColor = UIColor.init(named: "darkPurple")
         button.layer.cornerRadius = 20
         button.layer.masksToBounds = true
         button.addTarget(self, action: #selector(didTapLogin), for: .touchUpInside)
@@ -71,7 +67,9 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .white
+        self.hideKeyboardWhenTappedAround()
+        
+        view.backgroundColor = UIColor.init(named: "lightPurple")
         title = "Log in"
         
         
@@ -79,39 +77,39 @@ class LoginViewController: UIViewController {
         
         emailField.delegate = self
         passwordField.delegate = self
-        
-        
-        //Add subviews
-        view.addSubview(scrollView)
-        scrollView.addSubview(loginPageView)
-        scrollView.addSubview(emailField)
-        scrollView.addSubview(passwordField)
-        scrollView.addSubview(loginButton)
+       
+        view.addSubview(loginPageView)
+        view.addSubview(emailField)
+        view.addSubview(passwordField)
+        view.addSubview(loginButton)
 
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
-        scrollView.frame = view.bounds
-        
         setComponents()
        
-        
     }
     
     @objc private func didTapRegister() {
         let controller = RegisterViewController()
         navigationController?.pushViewController(controller, animated: true)
     }
-    
+}
+
+//MARK: - Alerts
+extension LoginViewController {
+    private func alertLoginError() {
+        let alert = UIAlertController(title: "Alert", message: "Please make sure you've entered your e-mail and password. Check if password contains 6 or more symbols.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+}
+
+//MARK: - Firebase login
+extension LoginViewController {
     @objc private func didTapLogin() {
-        
-        //get rid of keyboard
-        emailField.resignFirstResponder()
-        passwordField.resignFirstResponder()
-        
-        //validation
+       
         guard let email = emailField.text,
               let password = passwordField.text,
               !email.isEmpty,
@@ -121,12 +119,7 @@ class LoginViewController: UIViewController {
             return
         }
         
-        //Firebase Log in
         FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
-            
-            guard let strongSelf = self else {
-                return
-            }
   
             guard let result = authResult, error == nil else {
                 print("Login error")
@@ -154,14 +147,8 @@ class LoginViewController: UIViewController {
             
             UserDefaults.standard.set(email, forKey: "email")
             
-            strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+            self?.navigationController?.dismiss(animated: true, completion: nil)
         }
-    }
-
-    private func alertLoginError() {
-        let alert = UIAlertController(title: "Alert", message: "Please make sure you've entered your e-mail and password. Check if password contains 6 or more symbols.", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
-        present(alert, animated: true, completion: nil)
     }
 }
 
@@ -178,8 +165,8 @@ extension LoginViewController {
     
     private func setLoginPageView() {
         loginPageView.translatesAutoresizingMaskIntoConstraints = false
-        loginPageView.topAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.topAnchor, constant: 50).isActive = true
-        loginPageView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        loginPageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50).isActive = true
+        loginPageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         loginPageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
         loginPageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
     }
@@ -187,28 +174,28 @@ extension LoginViewController {
     private func setEmailField() {
         emailField.translatesAutoresizingMaskIntoConstraints = false
         emailField.topAnchor.constraint(equalTo: loginPageView.bottomAnchor, constant: 10).isActive = true
-        emailField.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
-        emailField.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        emailField.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 50).isActive = true
-        emailField.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -50).isActive = true
+        emailField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        emailField.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        emailField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive = true
+        emailField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50).isActive = true
     }
     
     private func setPasswordField() {
         passwordField.translatesAutoresizingMaskIntoConstraints = false
         passwordField.topAnchor.constraint(equalTo: emailField.bottomAnchor, constant: 10).isActive = true
-        passwordField.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
-        passwordField.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        passwordField.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 50).isActive = true
-        passwordField.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -50).isActive = true
+        passwordField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        passwordField.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        passwordField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive = true
+        passwordField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50).isActive = true
     }
     
     private func setLoginButton() {
         loginButton.translatesAutoresizingMaskIntoConstraints = false
         loginButton.topAnchor.constraint(equalTo: passwordField.bottomAnchor, constant: 10).isActive = true
-        loginButton.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
-        loginButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        loginButton.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 50).isActive = true
-        loginButton.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -50).isActive = true
+        loginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        loginButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        loginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive = true
+        loginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50).isActive = true
     }
 }
 
@@ -224,4 +211,6 @@ extension LoginViewController: UITextFieldDelegate {
         return true
     }
 }
+
+
 

@@ -50,8 +50,9 @@ struct Sender: SenderType {
 }
 
 class ChatViewController: MessagesViewController {
-    
+
     private var senderPhotoURL: URL?
+
     private var otherPhotoURL: URL?
     
     public static let dateFormatter: DateFormatter = {
@@ -63,25 +64,25 @@ class ChatViewController: MessagesViewController {
     }()
     
     public var otherUserEmail: String
+    
     private var conversationID: String?
-    
+  
     public var isNewChat = false
-    
+ 
     private var messages = [Message]()
-    
+
     private var selfSender: Sender? {
         guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
             return nil
         }
-        
+
         let safeEmail = DatabaseManager.safeEmail(email: email)
         
         return Sender(pictureURL: "", senderId: safeEmail, displayName: "Me")
     }
-    
+
     private let anotherSender = Sender(pictureURL: "", senderId: "2", displayName: "Tom")
-    
-    
+
     init(email: String, id: String?) {
         self.otherUserEmail = email
         self.conversationID = id
@@ -94,7 +95,7 @@ class ChatViewController: MessagesViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .yellow
+        view.backgroundColor = .white
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
@@ -134,7 +135,6 @@ class ChatViewController: MessagesViewController {
             listenForMessages(id: conversationID, shouldScrollToBottom: true)
         }
     }
-    
 }
 
 extension ChatViewController: InputBarAccessoryViewDelegate {
@@ -191,42 +191,44 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         print("new id \(newID)")
         return newID
     }
-
 }
 
+//MARK: - MessageKit methods
 extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate {
-    
+
     func currentSender() -> SenderType {
         if let sender = selfSender {
             return sender
         }
-        fatalError("Email is nil, it should be cached")
+        fatalError("Email doesn't exist")
     }
-    
+
     func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
+  
         return messages[indexPath.section]
     }
-    
+  
     func numberOfSections(in messagesCollectionView: MessagesCollectionView) -> Int {
-        messages.count
+        return messages.count
     }
     
     func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
+      
         let sender = message.sender
         if sender.senderId == selfSender?.senderId {
-            return .systemGreen
+            return UIColor.init(named: "darkPurple") ?? .green
         }
-        return .systemGray2
+        return UIColor.init(named: "lightPurple") ?? .gray
     }
     
     func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
+        
         let sender = message.sender
-        // sender image
+     
         if sender.senderId == selfSender?.senderId {
             if let photoURL = self.senderPhotoURL {
                 avatarView.sd_setImage(with: photoURL, completed: nil)
             } else {
-                // get image
                 guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
                     return
                 }
@@ -245,12 +247,10 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
                     }
                 }
             }
-        // other image
         } else {
             if let photoURL = self.otherPhotoURL {
                 avatarView.sd_setImage(with: photoURL, completed: nil)
             } else {
-                // get image
                 let email = self.otherUserEmail
                 let safeEmail = DatabaseManager.safeEmail(email: email)
                 let path = "images/\(safeEmail)_profile_picture.png"
@@ -269,7 +269,5 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
             }
         }
     }
-    
-    
 }
 

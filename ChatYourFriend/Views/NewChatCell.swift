@@ -50,6 +50,7 @@ class NewChatCell: UITableViewCell {
         
         let path = "images/\(model.userEmail)_profile_picture.png"
         StorageManager.shared.downloadURL(path: path) { [weak self] result in
+            
             switch result {
             case .success(let url):
                 DispatchQueue.main.async {
