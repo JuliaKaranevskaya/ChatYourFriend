@@ -25,11 +25,22 @@
 		C1AB3E6D26989580005117BB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C1AB3E6B26989580005117BB /* LaunchScreen.storyboard */; };
 		C1AB3E752698AB2A005117BB /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1AB3E742698AB2A005117BB /* LoginViewController.swift */; };
 		C1AB3E772698AB41005117BB /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1AB3E762698AB41005117BB /* RegisterViewController.swift */; };
+		C1D2E8282706E42D0052D715 /* ChatYourFriendUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D2E8272706E42D0052D715 /* ChatYourFriendUITests.swift */; };
 		C1ED6C7626C6C74B00DC36E4 /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ED6C7526C6C74B00DC36E4 /* SearchResult.swift */; };
 		C1ED6C7826C6C7A300DC36E4 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ED6C7726C6C7A300DC36E4 /* Conversation.swift */; };
 		C1ED6C7A26C6C7CE00DC36E4 /* LatestMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ED6C7926C6C7CE00DC36E4 /* LatestMessage.swift */; };
 		C1ED6C7D26C6D2E500DC36E4 /* MessengerUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ED6C7C26C6D2E500DC36E4 /* MessengerUser.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C1D2E82A2706E42D0052D715 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C1AB3E552698957C005117BB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C1AB3E5C2698957C005117BB;
+			remoteInfo = ChatYourFriend;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		9C0A9E014CA325CCECE3A7AE /* Pods-ChatYourFriend.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatYourFriend.release.xcconfig"; path = "Target Support Files/Pods-ChatYourFriend/Pods-ChatYourFriend.release.xcconfig"; sourceTree = "<group>"; };
@@ -54,6 +65,9 @@
 		C1AB3E6E26989580005117BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C1AB3E742698AB2A005117BB /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		C1AB3E762698AB41005117BB /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
+		C1D2E8252706E42D0052D715 /* ChatYourFriendUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChatYourFriendUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1D2E8272706E42D0052D715 /* ChatYourFriendUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatYourFriendUITests.swift; sourceTree = "<group>"; };
+		C1D2E8292706E42D0052D715 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C1ED6C7526C6C74B00DC36E4 /* SearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResult.swift; sourceTree = "<group>"; };
 		C1ED6C7726C6C7A300DC36E4 /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		C1ED6C7926C6C7CE00DC36E4 /* LatestMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestMessage.swift; sourceTree = "<group>"; };
@@ -66,6 +80,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				3529057B68C91C232B37B814 /* Pods_ChatYourFriend.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1D2E8222706E42D0052D715 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -128,6 +149,7 @@
 			isa = PBXGroup;
 			children = (
 				C1AB3E5F2698957C005117BB /* ChatYourFriend */,
+				C1D2E8262706E42D0052D715 /* ChatYourFriendUITests */,
 				C1AB3E5E2698957C005117BB /* Products */,
 				1535B1C168347A0E3EBD77E5 /* Pods */,
 				6BBF3B6285FD4754368F41C5 /* Frameworks */,
@@ -138,6 +160,7 @@
 			isa = PBXGroup;
 			children = (
 				C1AB3E5D2698957C005117BB /* ChatYourFriend.app */,
+				C1D2E8252706E42D0052D715 /* ChatYourFriendUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -177,6 +200,15 @@
 				C15F93A8269C38A5008E6627 /* DatabaseManager.swift */,
 			);
 			path = Firebase;
+			sourceTree = "<group>";
+		};
+		C1D2E8262706E42D0052D715 /* ChatYourFriendUITests */ = {
+			isa = PBXGroup;
+			children = (
+				C1D2E8272706E42D0052D715 /* ChatYourFriendUITests.swift */,
+				C1D2E8292706E42D0052D715 /* Info.plist */,
+			);
+			path = ChatYourFriendUITests;
 			sourceTree = "<group>";
 		};
 		C1ED6C7426C6C73100DC36E4 /* Models */ = {
@@ -222,6 +254,24 @@
 			productReference = C1AB3E5D2698957C005117BB /* ChatYourFriend.app */;
 			productType = "com.apple.product-type.application";
 		};
+		C1D2E8242706E42D0052D715 /* ChatYourFriendUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C1D2E82E2706E42D0052D715 /* Build configuration list for PBXNativeTarget "ChatYourFriendUITests" */;
+			buildPhases = (
+				C1D2E8212706E42D0052D715 /* Sources */,
+				C1D2E8222706E42D0052D715 /* Frameworks */,
+				C1D2E8232706E42D0052D715 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C1D2E82B2706E42D0052D715 /* PBXTargetDependency */,
+			);
+			name = ChatYourFriendUITests;
+			productName = ChatYourFriendUITests;
+			productReference = C1D2E8252706E42D0052D715 /* ChatYourFriendUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -233,6 +283,10 @@
 				TargetAttributes = {
 					C1AB3E5C2698957C005117BB = {
 						CreatedOnToolsVersion = 12.5.1;
+					};
+					C1D2E8242706E42D0052D715 = {
+						CreatedOnToolsVersion = 12.5.1;
+						TestTargetID = C1AB3E5C2698957C005117BB;
 					};
 				};
 			};
@@ -250,6 +304,7 @@
 			projectRoot = "";
 			targets = (
 				C1AB3E5C2698957C005117BB /* ChatYourFriend */,
+				C1D2E8242706E42D0052D715 /* ChatYourFriendUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -263,6 +318,13 @@
 				C15F93AD269C45B6008E6627 /* GoogleService-Info.plist in Resources */,
 				C1AB3E6A26989580005117BB /* Assets.xcassets in Resources */,
 				C1AB3E682698957C005117BB /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1D2E8232706E42D0052D715 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,7 +397,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C1D2E8212706E42D0052D715 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C1D2E8282706E42D0052D715 /* ChatYourFriendUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C1D2E82B2706E42D0052D715 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C1AB3E5C2698957C005117BB /* ChatYourFriend */;
+			targetProxy = C1D2E82A2706E42D0052D715 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		C1AB3E662698957C005117BB /* Main.storyboard */ = {
@@ -515,6 +593,44 @@
 			};
 			name = Release;
 		};
+		C1D2E82C2706E42D0052D715 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = DS3Z54QGNB;
+				INFOPLIST_FILE = ChatYourFriendUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.julia117.ChatYourFriendUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = ChatYourFriend;
+			};
+			name = Debug;
+		};
+		C1D2E82D2706E42D0052D715 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = DS3Z54QGNB;
+				INFOPLIST_FILE = ChatYourFriendUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.julia117.ChatYourFriendUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = ChatYourFriend;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -532,6 +648,15 @@
 			buildConfigurations = (
 				C1AB3E7226989580005117BB /* Debug */,
 				C1AB3E7326989580005117BB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C1D2E82E2706E42D0052D715 /* Build configuration list for PBXNativeTarget "ChatYourFriendUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C1D2E82C2706E42D0052D715 /* Debug */,
+				C1D2E82D2706E42D0052D715 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
