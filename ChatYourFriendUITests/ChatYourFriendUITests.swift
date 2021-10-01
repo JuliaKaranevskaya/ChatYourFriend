@@ -39,7 +39,7 @@ class ChatYourFriendUITests: XCTestCase {
         app.tabBars["Tab Bar"].buttons["My Chats"].tap()
         
         //4. Choose first friend to chat with
-        app.tables/*@START_MENU_TOKEN@*/.cells.staticTexts["Neil Rain"]/*[[".cells.staticTexts[\"Neil Rain\"]",".staticTexts[\"Neil Rain\"]"],[[[-1,1],[-1,0]]],[1]]@END_MENU_TOKEN@*/.tap()
+        app.tables.cells.staticTexts["Neil Rain"].tap()
 
         //5. Write "Hello" message and send it
         app.textViews.containing(.staticText, identifier:"Aa").element.tap()
